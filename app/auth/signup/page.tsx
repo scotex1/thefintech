@@ -34,10 +34,6 @@ export default function SignupPage() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, form.email, form.password)
       await updateProfile(cred.user, { displayName: form.name.trim() })
-      await sendEmailVerification(cred.user, { url: window.location.origin + '/auth/login' })
-      await auth.signOut()
-      toast.success('Account created! Check your email to verify.', { duration: 6000 })
-      router.push('/auth/login')
     } catch (err: any) {
       toast.error(err.message?.includes('email-already-in-use') ? 'Email already registered.' : err.message || 'Signup failed.')
     } finally { setLoading(false) }
