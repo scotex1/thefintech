@@ -43,11 +43,6 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password)
-      if (!cred.user.emailVerified) {
-        await auth.signOut()
-        toast.error('Please verify your email before signing in.')
-        return
-      }
       await apiClient.syncUser({ uid: cred.user.uid, email: cred.user.email || "", name: cred.user.displayName || "" })
       toast.success('Welcome back!')
       router.replace('/dashboard')
