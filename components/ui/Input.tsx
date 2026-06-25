@@ -1,3 +1,4 @@
+
 'use client'
 import { forwardRef } from 'react'
 
@@ -10,7 +11,6 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, hint, error, id, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
-
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
@@ -26,7 +26,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
-            {...props}  {/* ✅ value, onChange, type sab yahan se aayega */}
+            className="input"
+            {...props}
           />
         </div>
         {hint && !error && (
