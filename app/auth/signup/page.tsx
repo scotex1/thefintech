@@ -32,8 +32,10 @@ export default function SignupPage() {
     if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return }
     setLoading(true)
     try {
-      const cred = await createUserWithEmailAndPassword(auth, form.email, form.password)
-      await updateProfile(cred.user, { displayName: form.name.trim() })
+     const cred = await createUserWithEmailAndPassword(auth, form.email, form.password)
+        await updateProfile(cred.user, { displayName: form.name.trim() })
+        toast.success('Account created!')
+        router.replace('/dashboard') // ✅ Yeh add karo
     } catch (err: any) {
       toast.error(err.message?.includes('email-already-in-use') ? 'Email already registered.' : err.message || 'Signup failed.')
     } finally { setLoading(false) }
