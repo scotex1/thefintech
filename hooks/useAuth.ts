@@ -15,16 +15,9 @@ export function useAuth() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
-        if (!user.emailVerified) {
-          await fbSignOut(auth)
-          store.clear()
-          setLoading(false)
-          return
-        }
         try {
           const token = await user.getIdToken()
           store.setToken(token)
-          // Sync with backend — gets is_admin from server
           const [profileRes, planRes] = await Promise.allSettled([
             apiClient.getProfile(),
             apiClient.getPlan(),
@@ -39,7 +32,7 @@ export function useAuth() {
             plan:       plan.plan_id   || 'free',
             planName:   plan.plan_name || 'Free',
             planExpiry: plan.expiry_date || null,
-            isAdmin:    profile.is_admin === true, // only from server
+            isAdmin:    profile.is_admin === true,
           })
         } catch {
           store.setUser({ uid: user.uid, email: user.email || '', name: user.displayName || '' })
