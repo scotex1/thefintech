@@ -37,19 +37,52 @@ export default function LoginPage() {
     return map[code] || 'Something went wrong. Please try again.'
   }
 
-  const login = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !password) { toast.error('Fill in all fields'); return }
-    setLoading(true)
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, password)
-      await apiClient.syncUser({ uid: cred.user.uid, email: cred.user.email || "", name: cred.user.displayName || "" })
-      toast.success('Welcome back!')
-      router.replace('/dashboard')
-    } catch (err: any) {
-      toast.error(fbError(err.code))
-    } finally { setLoading(false) }
+const login = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  console.log("========== LOGIN START ==========");
+
+  if (!email || !password) {
+    toast.error("Fill in all fields");
+    return;
   }
+
+  setLoading(true);
+
+  try {
+    console.log("1. Starting Firebase login");
+
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+
+    console.log("2. Firebase Login Success", cred.user);
+
+    console.log("3. Before syncUser");
+
+    await apiClient.syncUser({
+      uid: cred.user.uid,
+      email: cred.user.email || "",
+      name: cred.user.displayName || "",
+    });
+
+    console.log("4. After syncUser");
+
+    toast.success("Welcome back!");
+
+    console.log("5. Redirecting");
+
+    router.replace("/dashboard");
+
+  } catch (err: any) {
+    console.error("LOGIN ERROR:", err);
+    console.error("CODE:", err.code);
+    console.error("MESSAGE:", err.message);
+
+    toast.error(fbError(err.code));
+  } finally {
+    console.log("========== LOGIN END ==========");
+    setLoading(false);
+  }
+};
 
   const googleLogin = async () => {
     try {
