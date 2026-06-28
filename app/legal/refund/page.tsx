@@ -5,7 +5,6 @@ export const metadata: Metadata = { title: "Refund Policy — FinVest Pro" }
 
 export default function Page() {
   return (
-    <LegalLayout
       title="Refund Policy"
       subtitle="We want you to be completely satisfied with FinVest Pro."
       icon="💳"
