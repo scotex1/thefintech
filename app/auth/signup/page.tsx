@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 
 function GoogleIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -20,7 +20,7 @@ function GoogleIcon() {
 }
 
 export default function SignupPage() {
-  const [form, setForm]     = useState({ name: '', email: '', password: '', confirm: '' })
+  const [form,    setForm]    = useState({ name: '', email: '', password: '', confirm: '' })
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const set = (k: string) => (e: any) => setForm(f => ({ ...f, [k]: e.target.value }))
@@ -32,10 +32,10 @@ export default function SignupPage() {
     if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return }
     setLoading(true)
     try {
-     const cred = await createUserWithEmailAndPassword(auth, form.email, form.password)
-        await updateProfile(cred.user, { displayName: form.name.trim() })
-        toast.success('Account created!')
-        router.replace('/dashboard') // ✅ Yeh add karo
+      const cred = await createUserWithEmailAndPassword(auth, form.email, form.password)
+      await updateProfile(cred.user, { displayName: form.name.trim() })
+      toast.success('Account created!')
+      router.replace('/dashboard')
     } catch (err: any) {
       toast.error(err.message?.includes('email-already-in-use') ? 'Email already registered.' : err.message || 'Signup failed.')
     } finally { setLoading(false) }
@@ -52,71 +52,177 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg-base)' }}>
-      <div className="flex-1 flex items-center justify-center p-6 py-12">
-        <div className="w-full max-w-[400px]">
-          <div className="flex justify-center mb-8">
-            <Link href="/home" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg" style={{ background: 'var(--gold-dim)', border: '1px solid var(--border-gold)', color: 'var(--gold)' }}>F</div>
-              <span className="font-semibold text-base">Finvest<span style={{ color: 'var(--gold)' }}>Pro</span></span>
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-base)' }}>
+
+      {/* ── Left — form ───────────────────────────────────────── */}
+      <div style={{
+        flex: 1, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', padding: '40px 24px',
+      }}>
+        <div style={{ width: '100%', maxWidth: '400px' }}>
+
+          {/* Logo */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '36px' }}>
+            <Link href="/home" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+              <div style={{
+                width: '38px', height: '38px', borderRadius: 'var(--r-md)',
+                background: 'var(--gold-dim)', border: '1px solid var(--border-gold)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'var(--font-display)', fontWeight: 800,
+                fontSize: '1.1rem', color: 'var(--gold)',
+              }}>F</div>
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
+                Fin<span style={{ color: 'var(--gold)' }}>Vest Pro</span>
+              </span>
             </Link>
           </div>
 
-          <h1 className="display-md mb-1.5">Create your account</h1>
-          <p className="body-md mb-8">Start your AI investment journey — free forever</p>
-
-          <button onClick={googleSignup} className="btn btn-ghost btn-lg w-full mb-6" style={{ border: '1px solid var(--border-1)', justifyContent: 'center' }}>
-            <GoogleIcon/> Continue with Google
-          </button>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1 divider"/>
-            <span className="caption">or with email</span>
-            <div className="flex-1 divider"/>
+          {/* Heading */}
+          <div style={{ marginBottom: '28px' }}>
+            <h1 className="display-md" style={{ marginBottom: '6px' }}>Create your account</h1>
+            <p className="body-md">Start your AI investment journey — free forever</p>
           </div>
 
-          <form onSubmit={signup} className="flex flex-col gap-4">
-            <Input label="Full name" value={form.name} onChange={set('name')} placeholder="Rahul Sharma" autoComplete="name" autoFocus/>
-            <Input label="Email address" type="email" value={form.email} onChange={set('email')} placeholder="you@example.com" autoComplete="email"/>
-            <Input label="Password" type="password" value={form.password} onChange={set('password')} placeholder="Min. 6 characters" hint="At least 6 characters"/>
-            <Input label="Confirm password" type="password" value={form.confirm} onChange={set('confirm')} placeholder="Repeat password"/>
-            <Button type="submit" loading={loading} size="lg" className="mt-2 w-full">Create account</Button>
+          {/* Google button */}
+          <button
+            onClick={googleSignup}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '10px', padding: '11px 20px',
+              background: 'var(--bg-overlay)',
+              border: '1px solid var(--border-strong)',
+              borderRadius: 'var(--r-md)',
+              color: 'var(--text-primary)',
+              fontSize: '0.9rem', fontWeight: 500,
+              fontFamily: 'var(--font-body)',
+              cursor: 'pointer',
+              transition: 'all var(--t-base)',
+              marginBottom: '24px',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--bg-hover)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--bg-overlay)' }}
+          >
+            <GoogleIcon /> Continue with Google
+          </button>
+
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px' }}>
+            <div className="divider" style={{ flex: 1 }} />
+            <span className="caption">or with email</span>
+            <div className="divider" style={{ flex: 1 }} />
+          </div>
+
+          {/* Form */}
+          <form onSubmit={signup} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Input
+              label="Full name"
+              value={form.name}
+              onChange={set('name')}
+              placeholder="Rahul Sharma"
+              autoComplete="name"
+              autoFocus
+            />
+            <Input
+              label="Email address"
+              type="email"
+              value={form.email}
+              onChange={set('email')}
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+            <Input
+              label="Password"
+              type="password"
+              value={form.password}
+              onChange={set('password')}
+              placeholder="Min. 6 characters"
+              hint="At least 6 characters"
+            />
+            <Input
+              label="Confirm password"
+              type="password"
+              value={form.confirm}
+              onChange={set('confirm')}
+              placeholder="Repeat password"
+            />
+            <Button type="submit" loading={loading} size="lg" className="mt-2 w-full">
+              Create account
+            </Button>
           </form>
 
-          <p className="caption text-center mt-6">
+          {/* Legal + login link */}
+          <p className="caption" style={{ textAlign: 'center', marginTop: '20px', color: 'var(--text-tertiary)' }}>
             By signing up, you agree to our{' '}
-            <Link href="/legal/terms" style={{ color: 'var(--gold)' }}>Terms</Link> and{' '}
-            <Link href="/legal/privacy" style={{ color: 'var(--gold)' }}>Privacy Policy</Link>
+            <Link href="/legal/terms" style={{ color: 'var(--gold)', textDecoration: 'none' }}>Terms</Link>
+            {' '}and{' '}
+            <Link href="/legal/privacy" style={{ color: 'var(--gold)', textDecoration: 'none' }}>Privacy Policy</Link>
           </p>
-          <p className="text-sm text-center mt-4" style={{ color: 'var(--text-3)' }}>
+          <p className="caption" style={{ textAlign: 'center', marginTop: '12px', color: 'var(--text-tertiary)' }}>
             Already have an account?{' '}
-            <Link href="/auth/login" style={{ color: 'var(--gold)' }} className="font-medium hover:underline">Sign in</Link>
+            <Link href="/auth/login" style={{ color: 'var(--gold)', fontWeight: 500, textDecoration: 'none' }}>
+              Sign in
+            </Link>
           </p>
         </div>
       </div>
 
-      {/* Right decorative panel */}
-      <div className="hidden lg:flex flex-col justify-center w-[380px] shrink-0 p-10 relative overflow-hidden" style={{ background: 'var(--bg-raised)', borderLeft: '1px solid var(--border-1)' }}>
-        <div className="absolute inset-0 dot-bg opacity-30 pointer-events-none"/>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at top right, rgba(212,168,83,0.08), transparent 60%)' }}/>
-        <div className="relative">
-          <p className="label mb-6">What you get for free</p>
-          <div className="flex flex-col gap-4">
+      {/* ── Right decorative panel (desktop only) ────────────── */}
+      <div
+        className="hide-mobile"
+        style={{
+          width: '400px', flexShrink: 0,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          padding: '48px', position: 'relative', overflow: 'hidden',
+          background: 'var(--bg-raised)',
+          borderLeft: '1px solid var(--border-default)',
+        }}
+      >
+        <div className="ticker-bg" style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }} />
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at top right, rgba(201,168,76,0.10) 0%, transparent 65%)',
+        }} />
+
+        <div style={{ position: 'relative' }}>
+          <div className="overline" style={{ marginBottom: '24px' }}>What you get for free</div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '36px' }}>
             {[
               { icon: '◐', title: 'Risk Profiler',  desc: '10-question AI quiz, instant results' },
-              { icon: '◉', title: 'Market News',    desc: 'AI-curated from 50+ sources' },
-              { icon: '◎', title: 'Basic SIP Calc', desc: 'Goal-based planning' },
+              { icon: '◉', title: 'Market News',    desc: 'AI-curated from 50+ sources, live' },
+              { icon: '◎', title: 'Basic SIP Calc', desc: 'Goal-based planning, milestone tracking' },
             ].map(f => (
-              <div key={f.title} className="flex items-start gap-4">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0 mono" style={{ background: 'var(--gold-dim)', border: '1px solid var(--border-gold)', color: 'var(--gold)' }}>{f.icon}</div>
+              <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                <div style={{
+                  width: '38px', height: '38px', borderRadius: 'var(--r-md)', flexShrink: 0,
+                  background: 'var(--gold-dim)', border: '1px solid var(--border-gold)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'var(--font-mono)', fontSize: '1rem', color: 'var(--gold)',
+                }}>{f.icon}</div>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{f.title}</p>
-                  <p className="caption mt-0.5">{f.desc}</p>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '3px' }}>
+                    {f.title}
+                  </p>
+                  <p className="caption">{f.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-8 pt-8" style={{ borderTop: '1px solid var(--border-1)' }}>
-            <p className="caption">No credit card required. Upgrade anytime.</p>
+
+          <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: '24px' }}>
+            {/* Mini stat row */}
+            <div style={{ display: 'flex', gap: '24px' }}>
+              {[
+                { num: '50K+', label: 'Investors' },
+                { num: '4.9★', label: 'Rating' },
+                { num: 'Free', label: 'Forever' },
+              ].map(s => (
+                <div key={s.label}>
+                  <p className="num-sm" style={{ color: 'var(--gold-bright)', fontWeight: 600 }}>{s.num}</p>
+                  <p className="caption" style={{ marginTop: '2px' }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
