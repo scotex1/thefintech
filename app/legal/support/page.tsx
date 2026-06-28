@@ -1,11 +1,8 @@
+import Link from "next/link"
 import type { Metadata } from "next"
-
-
 export const metadata: Metadata = { title: "Help Center — FinVest Pro" }
-
 export default function Page() {
   return (
-    <LegalLayout
       title="Help Center"
       subtitle="Everything you need to get the most out of FinVest Pro."
       icon="🛟"
