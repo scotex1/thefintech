@@ -37,52 +37,31 @@ export default function LoginPage() {
     return map[code] || 'Something went wrong. Please try again.'
   }
 
-const login = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  console.log("========== LOGIN START ==========");
-
-  if (!email || !password) {
-    toast.error("Fill in all fields");
-    return;
+  const login = async (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("========== LOGIN START ==========")
+    if (!email || !password) { toast.error("Fill in all fields"); return }
+    setLoading(true)
+    try {
+      console.log("1. Starting Firebase login")
+      const cred = await signInWithEmailAndPassword(auth, email, password)
+      console.log("2. Firebase Login Success", cred.user)
+      console.log("3. Before syncUser")
+      await apiClient.syncUser({ uid: cred.user.uid, email: cred.user.email || "", name: cred.user.displayName || "" })
+      console.log("4. After syncUser")
+      toast.success("Welcome back!")
+      console.log("5. Redirecting")
+      router.replace("/dashboard")
+    } catch (err: any) {
+      console.error("LOGIN ERROR:", err)
+      console.error("CODE:", err.code)
+      console.error("MESSAGE:", err.message)
+      toast.error(fbError(err.code))
+    } finally {
+      console.log("========== LOGIN END ==========")
+      setLoading(false)
+    }
   }
-
-  setLoading(true);
-
-  try {
-    console.log("1. Starting Firebase login");
-
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-
-    console.log("2. Firebase Login Success", cred.user);
-
-    console.log("3. Before syncUser");
-
-    await apiClient.syncUser({
-      uid: cred.user.uid,
-      email: cred.user.email || "",
-      name: cred.user.displayName || "",
-    });
-
-    console.log("4. After syncUser");
-
-    toast.success("Welcome back!");
-
-    console.log("5. Redirecting");
-
-    router.replace("/dashboard");
-
-  } catch (err: any) {
-    console.error("LOGIN ERROR:", err);
-    console.error("CODE:", err.code);
-    console.error("MESSAGE:", err.message);
-
-    toast.error(fbError(err.code));
-  } finally {
-    console.log("========== LOGIN END ==========");
-    setLoading(false);
-  }
-};
 
   const googleLogin = async () => {
     try {
@@ -101,80 +80,212 @@ const login = async (e: React.FormEvent) => {
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg-base)' }}>
-      {/* Left panel — decorative (desktop only) */}
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-base)' }}>
+
+      {/* ── Left decorative panel (desktop only) ─────────────── */}
       <div
-        className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 relative overflow-hidden"
-        style={{ background: 'var(--bg-raised)', borderRight: '1px solid var(--border-1)' }}
+        className="hide-mobile"
+        style={{
+          width: '440px', flexShrink: 0,
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          padding: '48px', position: 'relative', overflow: 'hidden',
+          background: 'var(--bg-raised)',
+          borderRight: '1px solid var(--border-default)',
+        }}
       >
-        <div className="absolute inset-0 dot-bg opacity-30 pointer-events-none"/>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at bottom left, rgba(212,168,83,0.08), transparent 60%)' }}/>
-        <div className="relative">
-          <Link href="/home" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg" style={{ background: 'var(--gold-dim)', border: '1px solid var(--border-gold)', color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>F</div>
-            <span className="font-semibold text-base" style={{ fontFamily: 'var(--font-display)' }}>Finvest<span style={{ color: 'var(--gold)' }}>Pro</span></span>
+        {/* Background textures */}
+        <div className="ticker-bg" style={{ position: 'absolute', inset: 0, opacity: 0.6, pointerEvents: 'none' }} />
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at bottom left, rgba(201,168,76,0.10) 0%, transparent 60%)',
+        }} />
+        {/* Top-right subtle glow */}
+        <div style={{
+          position: 'absolute', top: '-80px', right: '-80px', pointerEvents: 'none',
+          width: '300px', height: '300px',
+          background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)',
+        }} />
+
+        {/* Logo */}
+        <div style={{ position: 'relative' }}>
+          <Link
+            href="/home"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              textDecoration: 'none',
+            }}
+          >
+            <div style={{
+              width: '38px', height: '38px', borderRadius: 'var(--r-md)',
+              background: 'var(--gold-dim)', border: '1px solid var(--border-gold)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'var(--font-display)', fontWeight: 800,
+              fontSize: '1.1rem', color: 'var(--gold)',
+            }}>F</div>
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
+              Fin<span style={{ color: 'var(--gold)' }}>Vest Pro</span>
+            </span>
           </Link>
         </div>
-        <div className="relative">
-          <p className="display-md mb-6" style={{ fontFamily: 'var(--font-display)' }}>
-            Your AI investment advisor, <span className="gradient-gold">available 24/7.</span>
+
+        {/* Hero copy */}
+        <div style={{ position: 'relative' }}>
+          <div className="badge badge-gold" style={{ marginBottom: '20px' }}>AI-Powered</div>
+          <p
+            className="display-md"
+            style={{ fontFamily: 'var(--font-display)', marginBottom: '28px' }}
+          >
+            Your investment advisor,{' '}
+            <span className="gradient-gold">available 24/7.</span>
           </p>
-          <div className="flex flex-col gap-3">
-            {['Risk profiling in under 3 minutes', 'SIP goals with milestone tracking', 'Retirement corpus calculator', 'Real-time global event alerts'].map(f => (
-              <div key={f} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-2)' }}>
-                <span style={{ color: 'var(--green)' }}>✓</span>{f}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {[
+              'Risk profiling in under 3 minutes',
+              'SIP goals with milestone tracking',
+              'Retirement corpus calculator',
+              'Real-time global event alerts',
+            ].map(f => (
+              <div
+                key={f}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '10px',
+                  fontSize: '0.875rem', color: 'var(--text-secondary)',
+                }}
+              >
+                <div style={{
+                  width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
+                  background: 'var(--gain-dim)', border: '1px solid var(--border-gain)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                    <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="var(--gain-bright)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                {f}
               </div>
             ))}
           </div>
         </div>
-        <p className="caption relative">Investments subject to market risk. Read all documents carefully.</p>
+
+        {/* Disclaimer */}
+        <p className="caption" style={{ position: 'relative' }}>
+          Investments subject to market risk. Read all documents carefully.
+        </p>
       </div>
 
-      {/* Right panel — form */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-[400px]">
+      {/* ── Right panel — form ────────────────────────────────── */}
+      <div style={{
+        flex: 1, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', padding: '32px 24px',
+      }}>
+        <div style={{ width: '100%', maxWidth: '400px' }}>
+
           {/* Mobile logo */}
-          <div className="flex justify-center mb-8 lg:hidden">
-            <Link href="/home" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg" style={{ background: 'var(--gold-dim)', border: '1px solid var(--border-gold)', color: 'var(--gold)' }}>F</div>
-              <span className="font-semibold text-base">Finvest<span style={{ color: 'var(--gold)' }}>Pro</span></span>
+          <div className="show-mobile" style={{ display: 'flex', justifyContent: 'center', marginBottom: '36px' }}>
+            <Link href="/home" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+              <div style={{
+                width: '36px', height: '36px', borderRadius: 'var(--r-md)',
+                background: 'var(--gold-dim)', border: '1px solid var(--border-gold)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--gold)',
+              }}>F</div>
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
+                Fin<span style={{ color: 'var(--gold)' }}>Vest Pro</span>
+              </span>
             </Link>
           </div>
 
-          <h1 className="display-md mb-1.5">Welcome back</h1>
-          <p className="body-md mb-8">Sign in to your account</p>
+          {/* Heading */}
+          <div style={{ marginBottom: '32px' }}>
+            <h1 className="display-md" style={{ marginBottom: '6px' }}>Welcome back</h1>
+            <p className="body-md">Sign in to continue to your dashboard</p>
+          </div>
 
-          {/* Google */}
+          {/* Google button */}
           <button
             onClick={googleLogin}
-            className="btn btn-ghost btn-lg w-full mb-6"
-            style={{ border: '1px solid var(--border-1)', justifyContent: 'center' }}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '10px', padding: '11px 20px',
+              background: 'var(--bg-overlay)',
+              border: '1px solid var(--border-strong)',
+              borderRadius: 'var(--r-md)',
+              color: 'var(--text-primary)',
+              fontSize: '0.9rem', fontWeight: 500,
+              fontFamily: 'var(--font-body)',
+              cursor: 'pointer',
+              transition: 'all var(--t-base)',
+              marginBottom: '24px',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = 'var(--bg-hover)'
+              ;(e.currentTarget as HTMLElement).style.borderColor = 'var(--border-strong)'
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = 'var(--bg-overlay)'
+              ;(e.currentTarget as HTMLElement).style.borderColor = 'var(--border-strong)'
+            }}
           >
-            <GoogleIcon/> Continue with Google
+            <GoogleIcon /> Continue with Google
           </button>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1 divider"/>
-            <span className="caption">or continue with email</span>
-            <div className="flex-1 divider"/>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px' }}>
+            <div className="divider" style={{ flex: 1 }} />
+            <span className="caption">or with email</span>
+            <div className="divider" style={{ flex: 1 }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={login} className="flex flex-col gap-4">
-            <Input label="Email address" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus/>
+          <form onSubmit={login} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Input
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              autoComplete="email"
+              autoFocus
+            />
             <div>
-              <Input label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" autoComplete="current-password"/>
-              <button type="button" onClick={forgot} className="text-xs mt-2 transition-colors" style={{ color: 'var(--gold)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <Input
+                label="Password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Your password"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={forgot}
+                style={{
+                  marginTop: '8px',
+                  fontSize: '0.8rem', fontWeight: 500,
+                  color: 'var(--gold)',
+                  background: 'none', border: 'none',
+                  cursor: 'pointer', padding: 0,
+                  transition: 'opacity var(--t-fast)',
+                }}
+              >
                 Forgot password?
               </button>
             </div>
-            <Button type="submit" loading={loading} size="lg" className="mt-2 w-full">Sign in</Button>
+            <Button type="submit" loading={loading} size="lg" className="mt-2 w-full">
+              Sign in
+            </Button>
           </form>
 
-          <p className="text-sm text-center mt-6" style={{ color: 'var(--text-3)' }}>
+          {/* Footer */}
+          <p
+            className="caption"
+            style={{ textAlign: 'center', marginTop: '24px', color: 'var(--text-tertiary)' }}
+          >
             No account?{' '}
-            <Link href="/auth/signup" style={{ color: 'var(--gold)' }} className="font-medium hover:underline">
+            <Link
+              href="/auth/signup"
+              style={{ color: 'var(--gold)', fontWeight: 500, textDecoration: 'none' }}
+            >
               Create one free
             </Link>
           </p>
