@@ -15,11 +15,51 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           {children}
-          <Toaster position="bottom-right" toastOptions={{
-            style:{ background:'#111820', color:'#F0F4F8', border:'1px solid rgba(255,255,255,0.08)', borderRadius:'12px' },
-            success:{ iconTheme:{ primary:'#22C55E', secondary:'#111820' } },
-            error:  { iconTheme:{ primary:'#EF4444', secondary:'#111820' } },
-          }}/>
+          <Toaster
+            position="bottom-right"
+            gutter={10}
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'var(--bg-overlay)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--r-lg)',
+                fontSize: '0.875rem',
+                fontFamily: 'var(--font-body)',
+                boxShadow: 'var(--shadow-lg)',
+                padding: '12px 16px',
+                maxWidth: '380px',
+              },
+              success: {
+                duration: 3500,
+                iconTheme: { primary: '#10B981', secondary: 'var(--bg-overlay)' },
+                style: {
+                  background: 'var(--bg-overlay)',
+                  border: '1px solid var(--border-gain)',
+                  color: 'var(--text-primary)',
+                  borderRadius: 'var(--r-lg)',
+                  fontFamily: 'var(--font-body)',
+                  boxShadow: 'var(--shadow-gain)',
+                },
+              },
+              error: {
+                duration: 5000,
+                iconTheme: { primary: '#F43F5E', secondary: 'var(--bg-overlay)' },
+                style: {
+                  background: 'var(--bg-overlay)',
+                  border: '1px solid var(--border-loss)',
+                  color: 'var(--text-primary)',
+                  borderRadius: 'var(--r-lg)',
+                  fontFamily: 'var(--font-body)',
+                  boxShadow: 'var(--shadow-loss)',
+                },
+              },
+              loading: {
+                iconTheme: { primary: 'var(--gold)', secondary: 'var(--bg-overlay)' },
+              },
+            }}
+          />
         </Providers>
       </body>
     </html>
