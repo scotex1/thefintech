@@ -1,229 +1,107 @@
-import Link from "next/link"
-import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Reviews — FinVest Pro",
-  description: "See what Indian investors say about FinVest Pro.",
-}
+import type { Metadata } from 'next'
+import PublicNav from '@/components/layout/PublicNav'
+import PublicFooter from '@/components/layout/PublicFooter'
+export const metadata: Metadata = { title:'Reviews — FinVest Pro', description:'What Indian investors say about FinVest Pro.' }
 
 const REVIEWS = [
-  { name: "Priya Sharma",  role: "Software Engineer, Bangalore", rating: 5, text: "Finally an app that explains risk in plain English. My SIP is now goal-based, not random. The milestone tracker keeps me motivated.", avatar: "PS", plan: "Pro" },
-  { name: "Rahul Gupta",   role: "CA, Mumbai",                  rating: 5, text: "As a CA, I was skeptical. But the retirement calculator is more accurate than what I calculate manually. The inflation adjustment is perfect.", avatar: "RG", plan: "Elite" },
-  { name: "Anita Verma",   role: "Teacher, Delhi",              rating: 5, text: "Used the goal planner for my daughter education fund. It gave me a clear SIP plan with monthly milestones. Highly recommended.", avatar: "AV", plan: "Basic" },
-  { name: "Vikram Singh",  role: "Entrepreneur, Pune",          rating: 5, text: "The global event engine warned me about RBI rate hike impact on my debt funds 2 days before. Incredible feature.", avatar: "VS", plan: "Pro" },
-  { name: "Meera Iyer",    role: "Doctor, Chennai",             rating: 5, text: "I never understood portfolio allocation until this app. The risk profiler nailed my profile exactly.", avatar: "MI", plan: "Pro" },
-  { name: "Arjun Nair",    role: "IT Manager, Hyderabad",       rating: 4, text: "Stock analysis engine saves me hours of research. The fundamental + technical combo is unique in India.", avatar: "AN", plan: "Elite" },
+  {name:'Priya Sharma',role:'Software Engineer, Bangalore',av:'PS',plan:'Pro',stars:5,text:'The milestone tracker is life-changing. My SIP is now goal-based, not random guessing. I know exactly when I will hit ₹50 lakh — month and year.'},
+  {name:'Rahul Gupta',role:'Chartered Accountant, Mumbai',av:'RG',plan:'Elite',stars:5,text:'As a CA I was skeptical. The retirement calculator is more accurate than my manual Excel model. The inflation-adjusted corpus logic is mathematically impeccable.'},
+  {name:'Anita Verma',role:'School Teacher, Delhi',av:'AV',plan:'Basic',stars:5,text:'I am not a finance person but the goal planner made it crystal clear. I now have a ₹2.4 lakh/year SIP plan for my daughter\'s college fund.'},
+  {name:'Vikram Singh',role:'Entrepreneur, Pune',av:'VS',plan:'Pro',stars:5,text:'The global event engine flagged RBI rate hike impact on my debt funds 2 days before the policy announcement. I rebalanced in time. Incredible.'},
+  {name:'Meera Iyer',role:'Doctor, Chennai',av:'MI',plan:'Pro',stars:5,text:'I never understood portfolio allocation until FinVest Pro. The risk profiler nailed my profile exactly — Moderate-Aggressive — and gave me a precise allocation.'},
+  {name:'Arjun Nair',role:'IT Manager, Hyderabad',av:'AN',plan:'Elite',stars:4,text:'Stock analysis saves me hours of research weekly. The fundamental plus technical AI combo is genuinely unique in the Indian fintech space.'},
+  {name:'Sunita Reddy',role:'Homemaker, Hyderabad',av:'SR',plan:'Basic',stars:5,text:'My husband set this up for me and now I track our family SIPs myself. The dashboard is so clean and the milestone alerts keep me motivated.'},
+  {name:'Rohan Mehta',role:'Startup Founder, Bangalore',av:'RM',plan:'Elite',stars:5,text:'Portfolio optimizer recommended a rebalance I had been delaying for months. After following it, my Sharpe ratio improved noticeably in one quarter.'},
+  {name:'Kavya Nambiar',role:'Research Analyst, Mumbai',av:'KN',plan:'Pro',stars:5,text:'As someone who analyzes companies professionally, I was impressed by the depth of FinVest Pro\'s stock analysis. It surfaces metrics I would take 30 minutes to find.'},
 ]
 
-function StarRating({ rating, max = 5 }: { rating: number; max?: number }) {
-  return (
-    <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-      {Array.from({ length: max }).map((_, i) => (
-        <svg
-          key={i}
-          width="14" height="14" viewBox="0 0 14 14" fill="none"
-          style={{ flexShrink: 0 }}
-        >
-          <path
-            d="M7 1L8.73 4.52L12.63 5.07L9.82 7.81L10.46 11.7L7 9.77L3.54 11.7L4.18 7.81L1.37 5.07L5.27 4.52L7 1Z"
-            fill={i < rating ? "var(--gold)" : "var(--border-default)"}
-          />
-        </svg>
-      ))}
-    </div>
-  )
-}
-
-const PLAN_COLORS: Record<string, string> = {
-  Basic: "badge-neutral",
-  Pro:   "badge-gold",
-  Elite: "badge-purple",
-}
+const STATS = [
+  {v:'4.9★',l:'Average Rating'},
+  {v:'3,200+',l:'Active Users'},
+  {v:'₹48Cr+',l:'SIP Goals Set'},
+  {v:'97%',l:'Would Recommend'},
+]
 
 export default function TestimonialsPage() {
   return (
-    <div className="page-root">
+    <div style={{background:'var(--bg)',color:'var(--t1)',fontFamily:'var(--font-b)',minHeight:'100vh'}}>
+      <PublicNav/>
 
-      {/* ── Nav ──────────────────────────────────────────────── */}
-      <nav
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "0 40px", height: "64px",
-          borderBottom: "1px solid var(--border-default)",
-          background: "rgba(7,8,10,0.92)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          position: "sticky", top: 0, zIndex: 50,
-        }}
-      >
-        <Link
-          href="/home"
-          style={{
-            display: "flex", alignItems: "center", gap: "8px",
-            fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.125rem",
-            color: "var(--text-primary)", textDecoration: "none",
-          }}
-        >
-          <span style={{
-            width: 30, height: 30, borderRadius: "var(--r-sm)",
-            background: "var(--gold-dim)", border: "1px solid var(--border-gold)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "0.9rem",
-          }}>📈</span>
-          Fin<span style={{ color: "var(--gold)" }}>Vest Pro</span>
-        </Link>
-        <Link href="/auth/signup" className="btn btn-primary btn-sm">
-          Get Started
-        </Link>
-      </nav>
-
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section
-        style={{
-          padding: "80px 40px 64px",
-          textAlign: "center",
-          position: "relative",
-          overflow: "hidden",
-        }}
-        className="ticker-bg"
-      >
-        {/* Radial glow */}
-        <div style={{
-          position: "absolute", top: "-60px", left: "50%",
-          transform: "translateX(-50%)",
-          width: "500px", height: "300px",
-          background: "radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="badge badge-gold" style={{ marginBottom: "20px" }}>
-            <span className="badge-dot" style={{ background: "var(--gold)" }} />
-            Verified Reviews
+      {/* Hero */}
+      <section style={{paddingTop:140,paddingBottom:80,position:'relative',overflow:'hidden',textAlign:'center'}}>
+        <div className="hglow"/>
+        <div className="w" style={{position:'relative'}}>
+          <div className="fu d0" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'7px 18px',borderRadius:99,background:'rgba(201,168,76,0.08)',border:'1px solid rgba(201,168,76,0.2)',fontSize:12,fontWeight:600,color:'var(--gold)',letterSpacing:'0.07em',marginBottom:28}}>
+            <span className="dot"/>INVESTOR REVIEWS
           </div>
-
-          <h1
-            className="display-lg gradient-hero"
-            style={{ marginBottom: "12px" }}
-          >
-            What Investors Say
+          <h1 className="fu d1 pf" style={{fontSize:'clamp(2.2rem,5vw,3.8rem)',fontWeight:800,letterSpacing:'-0.025em',lineHeight:1.08,marginBottom:16}}>
+            Trusted by Indian investors<br/><em className="gg" style={{fontStyle:'italic'}}>across every city</em>
           </h1>
-
-          <p className="body-lg" style={{ marginBottom: "24px", maxWidth: "420px", margin: "0 auto 24px" }}>
-            Trusted by thousands of Indian investors building wealth with AI
+          <p className="fu d2" style={{fontSize:17,color:'var(--t2)',lineHeight:1.7,maxWidth:520,margin:'0 auto 48px'}}>
+            Real results from real users — engineers, doctors, teachers, CAs, and entrepreneurs.
           </p>
-
-          {/* Rating summary */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: "12px",
-            padding: "10px 20px",
-            background: "var(--bg-raised)",
-            border: "1px solid var(--border-gold)",
-            borderRadius: "var(--r-full)",
-            boxShadow: "var(--shadow-gold)",
-          }}>
-            <div style={{ display: "flex", gap: "3px" }}>
-              {[1,2,3,4,5].map(i => (
-                <svg key={i} width="16" height="16" viewBox="0 0 14 14">
-                  <path d="M7 1L8.73 4.52L12.63 5.07L9.82 7.81L10.46 11.7L7 9.77L3.54 11.7L4.18 7.81L1.37 5.07L5.27 4.52L7 1Z" fill="var(--gold)" />
-                </svg>
-              ))}
-            </div>
-            <span className="num-sm" style={{ color: "var(--gold-bright)", fontWeight: 600 }}>4.9</span>
-            <span className="divider-v" style={{ height: "16px" }} />
-            <span className="caption" style={{ color: "var(--text-secondary)" }}>from 2,400+ investors</span>
+          {/* Stars */}
+          <div className="fu d3" style={{display:'flex',justifyContent:'center',gap:4,alignItems:'center',marginBottom:56}}>
+            {'★★★★★'.split('').map((s,i)=><span key={i} style={{fontSize:28,color:'var(--gold)'}}>{s}</span>)}
+            <span style={{fontSize:16,color:'var(--t2)',marginLeft:12}}>4.9 / 5</span>
+          </div>
+          {/* Stats */}
+          <div className="fu d4" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:1,maxWidth:560,margin:'0 auto',background:'rgba(201,168,76,0.08)',border:'1px solid rgba(201,168,76,0.15)',borderRadius:16,overflow:'hidden'}}>
+            {STATS.map((s,i)=>(
+              <div key={s.l} style={{background:'var(--bg3)',padding:'18px 12px',textAlign:'center',borderRight:i<3?'1px solid rgba(255,255,255,0.04)':'none'}}>
+                <div style={{fontFamily:'var(--font-m)',fontSize:'1.4rem',fontWeight:500,color:'var(--gold)',letterSpacing:'-0.02em',marginBottom:4}}>{s.v}</div>
+                <div style={{fontSize:11,color:'var(--t3)',fontWeight:500}}>{s.l}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Reviews grid ─────────────────────────────────────── */}
-      <section style={{ padding: "0 40px 100px", maxWidth: "1200px", margin: "0 auto" }}>
-        <div
-          className="stagger"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "20px",
-          }}
-        >
-          {REVIEWS.map((r) => (
-            <article
-              key={r.name}
-              className="surface fade-up"
-              style={{
-                padding: "24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
-                transition: "transform var(--t-base), box-shadow var(--t-base)",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"
-                ;(e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)"
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.transform = ""
-                ;(e.currentTarget as HTMLElement).style.boxShadow = ""
-              }}
-            >
-              {/* Stars + plan */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <StarRating rating={r.rating} />
-                <span className={`badge ${PLAN_COLORS[r.plan] ?? "badge-gray"}`}>{r.plan}</span>
-              </div>
-
-              {/* Quote */}
-              <p
-                className="body-md"
-                style={{
-                  flex: 1,
-                  fontStyle: "italic",
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.7,
-                }}
-              >
-                &ldquo;{r.text}&rdquo;
-              </p>
-
-              <div className="divider" />
-
-              {/* Author */}
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{
-                  width: "38px", height: "38px", borderRadius: "50%",
-                  background: "var(--gold-dim)",
-                  border: "1px solid var(--border-gold)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: "var(--font-display)", fontSize: "0.75rem",
-                  fontWeight: 700, color: "var(--gold-bright)",
-                  flexShrink: 0,
-                }}>
-                  {r.avatar}
+      {/* Reviews grid */}
+      <section style={{paddingBottom:96,position:'relative',zIndex:1}}>
+        <div className="w">
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))',gap:16}}>
+            {REVIEWS.map((r,i)=>(
+              <div key={r.name} className={`lift fu d${Math.min(i,7)}`} style={{background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.05)',borderRadius:22,padding:'28px 28px 24px',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}}>
+                <div style={{position:'absolute',top:0,right:0,width:80,height:80,background:'radial-gradient(circle at top right,rgba(201,168,76,0.05),transparent 70%)',pointerEvents:'none'}}/>
+                <div style={{display:'flex',gap:3,marginBottom:20}}>
+                  {'★★★★★'.split('').map((s,j)=><span key={j} style={{fontSize:15,color:j<r.stars?'var(--gold)':'var(--t4)'}}>{s}</span>)}
                 </div>
-                <div>
-                  <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)" }}>
-                    {r.name}
-                  </p>
-                  <p className="caption">{r.role}</p>
+                <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.75,flex:1,marginBottom:24,fontStyle:'italic'}}>&ldquo;{r.text}&rdquo;</p>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:12}}>
+                    <div style={{width:40,height:40,borderRadius:'50%',background:'linear-gradient(135deg,rgba(201,168,76,0.2),rgba(201,168,76,0.06))',border:'1px solid rgba(201,168,76,0.22)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--font-d)',fontSize:13,fontWeight:700,color:'var(--gold)',flexShrink:0}}>{r.av}</div>
+                    <div>
+                      <div style={{fontSize:14,fontWeight:600,color:'var(--t1)'}}>{r.name}</div>
+                      <div style={{fontSize:12,color:'var(--t3)',marginTop:1}}>{r.role}</div>
+                    </div>
+                  </div>
+                  <span style={{fontSize:11,padding:'3px 10px',borderRadius:99,fontWeight:600,background:'rgba(201,168,76,0.1)',color:'var(--gold)',border:'1px solid rgba(201,168,76,0.2)',flexShrink:0}}>{r.plan}</span>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div style={{ textAlign: "center", marginTop: "64px" }}>
-          <p className="body-md" style={{ marginBottom: "20px" }}>
-            Join thousands of investors growing wealth smarter
-          </p>
-          <Link href="/auth/signup" className="btn btn-primary btn-xl">
-            Start for Free
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* CTA */}
+      <section style={{paddingBottom:96,position:'relative',zIndex:1}}>
+        <div className="w">
+          <div style={{maxWidth:680,margin:'0 auto',textAlign:'center',padding:'64px 48px',borderRadius:28,background:'linear-gradient(160deg,var(--bg4),var(--bg3))',border:'1px solid rgba(201,168,76,0.18)',boxShadow:'0 0 60px rgba(201,168,76,0.05)',position:'relative',overflow:'hidden'}}>
+            <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.08),transparent 65%)',pointerEvents:'none'}}/>
+            <div style={{position:'relative'}}>
+              <h2 className="pf" style={{fontSize:'clamp(1.8rem,4vw,2.6rem)',fontWeight:700,letterSpacing:'-0.02em',marginBottom:14}}>Join <em className="gg" style={{fontStyle:'italic'}}>3,200+ investors</em></h2>
+              <p style={{fontSize:16,color:'var(--t2)',lineHeight:1.7,marginBottom:32,maxWidth:440,margin:'0 auto 32px'}}>Start free. Take the risk profiler in 3 minutes and see your personalized allocation instantly.</p>
+              <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+                <a href="/auth/signup" style={{padding:'13px 30px',borderRadius:12,fontSize:15,fontWeight:700,background:'var(--gold)',color:'var(--bg)',textDecoration:'none',boxShadow:'0 4px 20px rgba(201,168,76,0.28)'}}>Create free account →</a>
+                <a href="/pricing" style={{padding:'13px 24px',borderRadius:12,fontSize:15,fontWeight:600,background:'transparent',color:'var(--t2)',textDecoration:'none',border:'1px solid rgba(255,255,255,0.08)'}}>See pricing</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <PublicFooter/>
     </div>
   )
 }
