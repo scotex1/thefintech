@@ -1,32 +1,55 @@
-import Link from "next/link"
-import type { Metadata } from "next"
-export const metadata: Metadata = { title: "Refund Policy — FinVest Pro" }
+import type { Metadata } from 'next'
+import PublicNav from '@/components/layout/PublicNav'
+import PublicFooter from '@/components/layout/PublicFooter'
+export const metadata: Metadata = { title:'Refund Policy — FinVest Pro' }
+
 export default function Page() {
   return (
-    <div className="min-h-screen bg-[#060A0F] text-[#F0F4F8]">
-      <nav className="flex items-center justify-between px-6 lg:px-12 py-4 border-b border-[rgba(255,255,255,0.06)]">
-        <Link href="/home" className="flex items-center gap-2 font-bold">📈 Finvest<span className="text-[#C9A84C]">Pro</span></Link>
-        <Link href="/auth/login" className="text-sm text-[#C9A84C]">Sign In</Link>
-      </nav>
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-2">Refund Policy</h1>
-        <p className="text-[#8A9BB0] text-sm mb-10">Last updated: {new Date().toLocaleDateString("en-IN")}</p>
-        <div className="prose prose-invert max-w-none text-[#8A9BB0] leading-relaxed [&_h2]:text-[#F0F4F8] [&_h2]:font-semibold [&_h2]:text-lg [&_h2]:mt-8 [&_h2]:mb-3 [&_strong]:text-[#F0F4F8]">
-          
-        <h2>Refund Window</h2>
-        <p>We offer a <strong>7-day refund</strong> on all subscription plans from the date of purchase, provided you have not used more than 3 engine sessions.</p>
-        <h2>How to Request a Refund</h2>
-        <p>Email <strong>support@finvestpro.in</strong> with your registered email and Order ID within 7 days of purchase. Refunds are processed within 5-7 business days to your original payment method.</p>
-        <h2>Non-Refundable Cases</h2>
-        <p>Refunds are not provided after 7 days, for annual plans after the first 7 days, or if the account has violated our Terms of Service.</p>
-        <h2>Partial Refunds</h2>
-        <p>We do not offer partial refunds for unused subscription days. You retain access to your plan until the end of the billing period.</p>
-        <h2>Contact</h2>
-        <p>Refund queries: <strong>support@finvestpro.in</strong></p>
-
+    <div style={{background:'var(--bg)',color:'var(--t1)',fontFamily:'var(--font-b)',minHeight:'100vh'}}>
+      <PublicNav/>
+      <section style={{paddingTop:140,paddingBottom:96,position:'relative',zIndex:1}}>
+        <div className="w" style={{maxWidth:760}}>
+          <div style={{marginBottom:56}}>
+            <p style={{fontSize:11,fontWeight:600,color:'var(--t3)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:14}}>Legal</p>
+            <h1 className="pf" style={{fontSize:'clamp(2rem,4vw,3rem)',fontWeight:800,letterSpacing:'-0.025em',marginBottom:8}}>Refund Policy</h1>
+            <p style={{fontSize:13,color:'var(--t3)'}}>Last updated: {new Date().toLocaleDateString('en-IN')}</p>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:0}}>
+            
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>Refund Window</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              We offer a 7-day full refund on all subscription plans from the date of purchase, provided you have not used more than 3 premium engine sessions.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>How to Request a Refund</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              Email support@finvestpro.in with your registered email and Order ID within 7 days of purchase. Refunds are processed within 5–7 business days to your original payment method.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>Non-Refundable Cases</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              Refunds are not provided after 7 days, for annual plans after the first 14 days, or if the account has violated our Terms of Service.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>Partial Refunds</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              We do not offer partial refunds for unused subscription days. You retain access to your plan features until the end of the billing period.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>Contact</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              Refund queries: support@finvestpro.in · Please include your Order ID in the subject line.
+            </p>
+          </div>
+          </div>
         </div>
-      </div>
+      </section>
+      <PublicFooter/>
     </div>
   )
 }
-
