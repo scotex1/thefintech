@@ -1,64 +1,67 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-
-export const metadata: Metadata = { title: "Privacy Policy — FinVest Pro" }
-
-const lastUpdated = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
-
-const SECTIONS = [
-  { title: "Information We Collect",    body: "We collect information you provide: name, email, financial goals, risk profile answers, and investment data. We also collect usage analytics to improve our platform." },
-  { title: "How We Use Your Information", body: "Your data is used to provide personalized investment analysis, generate risk profiles, calculate SIP recommendations, and improve our AI engines. We never sell your data." },
-  { title: "Data Security",             body: "All data is encrypted in transit (TLS) and at rest. We use Firebase Authentication and Firestore with row-level security rules. Payments are processed by Cashfree — we never store card details." },
-  { title: "Third-Party Services",      body: "We use Firebase (Google) for authentication and database, Cashfree for payments, and market data APIs for financial information. Each has their own privacy policy." },
-  { title: "Your Rights",               body: "You may request deletion of your account and all associated data at any time by contacting support@finvestpro.in.", link: { text: "support@finvestpro.in", href: "mailto:support@finvestpro.in" } },
-  { title: "Contact",                   body: "Privacy concerns: privacy@finvestpro.in", link: { text: "privacy@finvestpro.in", href: "mailto:privacy@finvestpro.in" } },
-]
+import type { Metadata } from 'next'
+import PublicNav from '@/components/layout/PublicNav'
+import PublicFooter from '@/components/layout/PublicFooter'
+export const metadata: Metadata = { title:'Privacy Policy — FinVest Pro' }
 
 export default function Page() {
   return (
-    <div className="page-root">
-      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 40px", height: "64px", borderBottom: "1px solid var(--border-default)", background: "rgba(7,8,10,0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 50 }}>
-        <Link href="/home" style={{ display: "flex", alignItems: "center", gap: "9px", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.125rem", color: "var(--text-primary)", textDecoration: "none" }}>
-          <span style={{ width: 30, height: 30, borderRadius: "var(--r-sm)", background: "var(--gold-dim)", border: "1px solid var(--border-gold)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem" }}>📈</span>
-          Fin<span style={{ color: "var(--gold)" }}>Vest Pro</span>
-        </Link>
-        <Link href="/auth/login" style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--gold)", textDecoration: "none", padding: "6px 14px", border: "1px solid var(--border-gold)", borderRadius: "var(--r-md)" }}>Sign In</Link>
-      </nav>
-      <div style={{ maxWidth: "780px", margin: "0 auto", padding: "60px 32px 100px" }}>
-        <div style={{ marginBottom: "48px" }}>
-          <div style={{ width: "48px", height: "48px", borderRadius: "var(--r-lg)", background: "rgba(96,165,250,0.08)", border: "1px solid rgba(96,165,250,0.20)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", marginBottom: "20px" }}>🔒</div>
-          <h1 className="display-md" style={{ color: "var(--text-primary)", marginBottom: "8px" }}>Privacy Policy</h1>
-          <p className="body-md" style={{ marginBottom: "12px" }}>Your data is yours. Here is exactly how we handle it.</p>
-          <span className="badge badge-gray">Last updated: {lastUpdated}</span>
+    <div style={{background:'var(--bg)',color:'var(--t1)',fontFamily:'var(--font-b)',minHeight:'100vh'}}>
+      <PublicNav/>
+      <section style={{paddingTop:140,paddingBottom:96,position:'relative',zIndex:1}}>
+        <div className="w" style={{maxWidth:760}}>
+          <div style={{marginBottom:56}}>
+            <p style={{fontSize:11,fontWeight:600,color:'var(--t3)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:14}}>Legal</p>
+            <h1 className="pf" style={{fontSize:'clamp(2rem,4vw,3rem)',fontWeight:800,letterSpacing:'-0.025em',marginBottom:8}}>Privacy Policy</h1>
+            <p style={{fontSize:13,color:'var(--t3)'}}>Last updated: {new Date().toLocaleDateString('en-IN')}</p>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:0}}>
+            
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>1. Information We Collect</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              We collect your name, email, financial goals, risk profile answers, and usage analytics. We also collect device and browser data to improve performance.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>2. How We Use Your Information</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              Your data is used to provide personalized AI analysis, generate risk profiles, calculate SIP recommendations, and improve our engines. We never sell your data to third parties.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>3. Data Security</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Payments are processed by Cashfree — we never store card details on our servers.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>4. Third-Party Services</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              We use Firebase (Google) for authentication and database, Cashfree for payments, and market data APIs for financial information. Each has their own privacy policy.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>5. Data Retention</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              We retain your data as long as your account is active. You may request deletion at any time by emailing privacy@finvestpro.in.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>6. Your Rights</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              You may access, correct, export, or delete your personal data at any time. Contact privacy@finvestpro.in for any privacy-related requests.
+            </p>
+          </div>
+          <div style={{paddingTop:32,borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+            <h2 className="pf" style={{fontSize:20,fontWeight:700,color:'var(--t1)',marginBottom:12}}>7. Contact</h2>
+            <p style={{fontSize:15,color:'var(--t2)',lineHeight:1.8}}>
+              Privacy concerns: privacy@finvestpro.in · Response within 48 business hours.
+            </p>
+          </div>
+          </div>
         </div>
-        <div className="divider" style={{ marginBottom: "48px" }} />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {SECTIONS.map((s, i) => (
-            <div key={i} className="fade-up" style={{ padding: "28px 0", borderBottom: i < SECTIONS.length - 1 ? "1px solid var(--border-subtle)" : "none", display: "flex", gap: "20px", alignItems: "flex-start", animationDelay: `${i * 50}ms` }}>
-              <div style={{ width: "28px", height: "28px", borderRadius: "var(--r-sm)", background: "var(--bg-subtle)", border: "1px solid var(--border-default)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-mono)", fontSize: "0.6875rem", fontWeight: 600, color: "var(--text-tertiary)", flexShrink: 0, marginTop: "2px" }}>
-                {String(i + 1).padStart(2, "0")}
-              </div>
-              <div style={{ flex: 1 }}>
-                <h2 className="heading-md" style={{ color: "var(--text-primary)", marginBottom: "10px" }}>{s.title}</h2>
-                <p className="body-md" style={{ color: "var(--text-secondary)", lineHeight: 1.75 }}>
-                  {s.link
-                    ? s.body.split(s.link.text).map((part, pi, arr) => (
-                        <span key={pi}>{part}{pi < arr.length - 1 && <a href={s.link!.href} style={{ color: "var(--gold)", textDecoration: "none", fontWeight: 500 }}>{s.link!.text}</a>}</span>
-                      ))
-                    : s.body}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="surface-xs" style={{ marginTop: "48px", padding: "20px 24px" }}>
-          <p className="body-sm" style={{ color: "var(--text-secondary)" }}>We are committed to protecting your privacy and will notify you within 72 hours of any data breach that may affect your personal information.</p>
-        </div>
-      </div>
+      </section>
+      <PublicFooter/>
     </div>
   )
 }
-
-
-
-You are out of free messages until 12:20 AM
