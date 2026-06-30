@@ -1,114 +1,78 @@
-'use client'
-import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/hooks/useAuth'
-import { apiClient } from '@/lib/api'
-import { formatCurrency, formatDate, daysRemaining, isPlanExpired } from '@/lib/utils'
-import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+export const metadata: Metadata = { title:'Subscription — FinVest Pro' }
+
+const FEATURES_FREE = ['Risk Profiler (full 10-question)','Market News feed','Basic SIP calculator','1 saved goal']
+const PAYMENTS: any[] = []
 
 export default function SubscriptionPage() {
-  const { plan, planName, planExpiry } = useAuth()
-  const { data } = useQuery({ queryKey:['payment-history'], queryFn:()=>apiClient.getPaymentHistory().then(r=>r.data) })
-  const payments = data?.payments || []
-  const expired = isPlanExpired(planExpiry)
-  const days = daysRemaining(planExpiry)
-  const planBadge: Record<string,string> = { free:'gray', basic:'blue', pro:'gold', elite:'purple' }
-  const statusBadge: Record<string,string> = { SUCCESS:'green', FAILED:'red', PENDING:'gold' }
-
-  const FEATURES: Record<string, string[]> = {
-    free:  ['Risk Profiler', 'Market News', 'Basic SIP calculator'],
-    basic: ['Risk Profiler', 'Market News', 'Goal Planner + milestones', 'Retirement Calculator'],
-    pro:   ['Risk Profiler', 'Market News', 'Goal Planner', 'Retirement', 'Stock Analysis AI', 'Portfolio Optimizer', 'Global Events Engine'],
-    elite: ['Everything in Pro', 'Tax Harvesting AI', 'Family Portfolios', 'API Access'],
-  }
-
   return (
-    <div className="max-w-2xl fade-up pb-24 md:pb-0">
-      <div className="mb-8">
-        <p className="label mb-1.5">Billing</p>
-        <h1 className="display-md">Subscription</h1>
+    <div style={{maxWidth:660}}>
+      <div style={{marginBottom:32}}>
+        <p style={{fontSize:11,fontWeight:600,color:'var(--t3)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:8}}>Billing</p>
+        <h1 className="pf" style={{fontSize:'clamp(1.8rem,3vw,2.2rem)',fontWeight:800,letterSpacing:'-0.02em'}}>Subscription</h1>
       </div>
 
-      {/* Current plan */}
-      <Card gold className="mb-5">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <Badge variant={planBadge[plan] || 'gray'} className="mb-2">{planName}</Badge>
-            <h2 className="display-md" style={{ color:'var(--gold)' }}>{planName}</h2>
+      {/* Current plan card */}
+      <div style={{background:'linear-gradient(160deg,var(--bg4),var(--bg3))',border:'1px solid rgba(201,168,76,0.2)',borderRadius:24,padding:'30px',marginBottom:16,position:'relative',overflow:'hidden'}}>
+        <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at top right,rgba(201,168,76,0.07),transparent 65%)',pointerEvents:'none'}}/>
+        <div style={{position:'relative'}}>
+          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:22}}>
+            <div>
+              <span style={{fontSize:11,padding:'3px 10px',borderRadius:99,fontWeight:600,background:'rgba(113,113,128,0.15)',color:'#8080A0',border:'1px solid rgba(113,113,128,0.2)',display:'inline-block',marginBottom:10}}>Free Plan</span>
+              <h2 className="pf" style={{fontSize:28,fontWeight:700,color:'var(--t1)',marginBottom:2}}>Free Plan</h2>
+              <p style={{fontSize:13,color:'var(--t3)'}}>No expiry · Active forever</p>
+            </div>
+            <div style={{width:54,height:54,borderRadius:16,background:'rgba(201,168,76,0.08)',border:'1px solid rgba(201,168,76,0.18)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>⭐</div>
           </div>
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-            style={{ background:'var(--gold-dim)', border:'1px solid var(--border-gold)' }}
-          >
-            {plan === 'free' ? '⭐' : plan === 'basic' ? '🔵' : plan === 'pro' ? '⚡' : '👑'}
-          </div>
-        </div>
 
-        {/* Status */}
-        <div className="flex items-center justify-between p-4 rounded-xl mb-5" style={{ background:'var(--bg-overlay)' }}>
-          <div>
-            <p className="text-sm font-semibold" style={{ color:'var(--text-1)' }}>
-              {plan === 'free' ? 'Free forever' : expired ? '⚠ Plan expired' : `${days} days remaining`}
-            </p>
-            {planExpiry && <p className="caption mt-0.5">Expires {formatDate(planExpiry)}</p>}
+          {/* Status row */}
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px',borderRadius:12,background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.04)',marginBottom:22}}>
+            <div>
+              <p style={{fontSize:14,fontWeight:600,color:'var(--t1)'}}>Free forever</p>
+              <p style={{fontSize:12,color:'var(--t3)',marginTop:2}}>No billing, no credit card</p>
+            </div>
+            <span style={{fontSize:11,padding:'4px 12px',borderRadius:99,fontWeight:600,background:'rgba(14,217,122,0.1)',color:'var(--green)',border:'1px solid rgba(14,217,122,0.2)'}}>● Active</span>
           </div>
-          <Badge variant={expired ? 'red' : plan === 'free' ? 'gray' : 'green'}>
-            {expired ? 'Expired' : plan === 'free' ? 'Active' : 'Active'}
-          </Badge>
-        </div>
 
-        {/* Features */}
-        <div className="mb-5">
-          <p className="label mb-3">Included in your plan</p>
-          <div className="grid grid-cols-1 gap-1.5">
-            {(FEATURES[plan] || FEATURES.free).map(f => (
-              <div key={f} className="flex items-center gap-2.5 text-sm" style={{ color:'var(--text-2)' }}>
-                <span style={{ color:'var(--green)' }}>✓</span>{f}
+          {/* Features */}
+          <div style={{marginBottom:22}}>
+            <p style={{fontSize:12,fontWeight:600,color:'var(--t3)',marginBottom:12}}>Included in your plan</p>
+            {FEATURES_FREE.map(f=>(
+              <div key={f} style={{display:'flex',alignItems:'center',gap:10,fontSize:14,color:'var(--t2)',marginBottom:9}}>
+                <div style={{width:17,height:17,borderRadius:'50%',background:'rgba(14,217,122,0.1)',border:'1px solid rgba(14,217,122,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,color:'var(--green)',flexShrink:0}}>✓</div>
+                {f}
               </div>
             ))}
           </div>
-        </div>
 
-        <Link href="/pricing">
-          <Button className="w-full">
-            {expired ? 'Renew Plan' : plan === 'free' ? 'Upgrade Plan' : 'Change Plan'}
-          </Button>
-        </Link>
-      </Card>
+          <Link href="/pricing" style={{display:'block',textAlign:'center',padding:'13px',borderRadius:12,background:'var(--gold)',color:'var(--bg)',fontSize:15,fontWeight:700,textDecoration:'none',boxShadow:'0 2px 16px rgba(201,168,76,0.25)'}}>Upgrade Plan</Link>
+        </div>
+      </div>
+
+      {/* Compare plans CTA */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:16}}>
+        {[{id:'basic',name:'Basic',price:'₹499/mo',c:'#5B9FFF'},{id:'pro',name:'Pro',price:'₹999/mo',c:'#C9A84C'},{id:'elite',name:'Elite',price:'₹1,999/mo',c:'#9B7FFF'}].map(p=>(
+          <Link key={p.id} href="/pricing" style={{textDecoration:'none',display:'block',background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.05)',borderRadius:16,padding:'18px 14px',textAlign:'center',transition:'border-color 0.15s'}}>
+            <p style={{fontSize:15,fontWeight:700,color:p.c,fontFamily:'var(--font-d)',marginBottom:4}}>{p.name}</p>
+            <p style={{fontFamily:'var(--font-m)',fontSize:15,fontWeight:500,color:'var(--t1)',marginBottom:4}}>{p.price}</p>
+            <p style={{fontSize:11,color:'var(--t3)'}}>View details →</p>
+          </Link>
+        ))}
+      </div>
 
       {/* Payment history */}
-      <Card>
-        <h2 className="title-sm mb-5">Payment History</h2>
-        {payments.length === 0 ? (
-          <div className="text-center py-10">
-            <div className="text-4xl mb-3">💳</div>
-            <p className="body-sm">No payments yet</p>
+      <div style={{background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.05)',borderRadius:22,padding:'26px'}}>
+        <h2 className="pf" style={{fontSize:18,fontWeight:700,marginBottom:20,color:'var(--t1)'}}>Payment History</h2>
+        {PAYMENTS.length===0?(
+          <div style={{textAlign:'center',padding:'40px 0'}}>
+            <div style={{fontSize:36,marginBottom:12}}>💳</div>
+            <p style={{fontSize:14,color:'var(--t3)'}}>No payments yet</p>
           </div>
-        ) : (
-          <div className="overflow-x-auto -mx-1">
-            <table className="data-table w-full min-w-[480px]">
-              <thead>
-                <tr>
-                  <th>Order</th><th>Plan</th><th>Amount</th><th>Status</th><th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {payments.map((p: any) => (
-                  <tr key={p.order_id}>
-                    <td><span className="mono text-xs" style={{ color:'var(--text-3)' }}>{(p.order_id || '').slice(-10)}</span></td>
-                    <td><Badge variant={planBadge[p.plan] || 'gray'}>{p.plan}</Badge></td>
-                    <td><span className="mono font-semibold text-sm" style={{ color:'var(--gold)' }}>{formatCurrency((p.amount||0)/100)}</span></td>
-                    <td><Badge variant={statusBadge[p.status] || 'gray'}>{p.status}</Badge></td>
-                    <td><span className="caption">{formatDate(p.date || p.created_at)}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        ):(
+          <p>Payments here</p>
         )}
-      </Card>
+      </div>
     </div>
   )
 }
