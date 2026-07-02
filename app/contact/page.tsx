@@ -1,90 +1,70 @@
 'use client'
 import { useState } from 'react'
-import PublicNav from '@/components/layout/PublicNav'
-import PublicFooter from '@/components/layout/PublicFooter'
+import MarketingNav from '@/components/layout/MarketingNav'
+import MarketingFooter from '@/components/layout/MarketingFooter'
+import Input from '@/components/ui/Input'
+import Button from '@/components/ui/Button'
+import toast from 'react-hot-toast'
 
-const INP: React.CSSProperties = {
-  width:'100%',padding:'11px 14px',fontSize:14,color:'var(--t1)',
-  background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.07)',
-  borderRadius:11,outline:'none',fontFamily:'inherit',transition:'border-color 0.15s',
-}
 const CHANNELS = [
-  {icon:'📧',l:'Email',v:'support@finvestpro.in'},
-  {icon:'💬',l:'WhatsApp',v:'+91 XXXXX XXXXX'},
-  {icon:'🕐',l:'Hours',v:'Mon–Fri, 9am–6pm IST'},
+  { icon: '✉', label: 'Email', value: 'support@finvestpro.in' },
+  { icon: '◔', label: 'WhatsApp', value: '+91 XXXXX XXXXX' },
+  { icon: '◷', label: 'Hours', value: 'Mon–Fri, 9am–6pm IST' },
 ]
 
 export default function ContactPage() {
-  const [form,setForm] = useState({name:'',email:'',subject:'',message:''})
-  const [loading,setLoading] = useState(false)
-  const [sent,setSent] = useState(false)
-  const set = (k:string) => (e:any) => setForm(f=>({...f,[k]:e.target.value}))
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [loading, setLoading] = useState(false)
+  const set = (k: string) => (e: any) => setForm(f => ({ ...f, [k]: e.target.value }))
 
-  const submit = async(e:React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name||!form.email||!form.message) return
+    if (!form.name || !form.email || !form.message) { toast.error('Fill all required fields'); return }
     setLoading(true)
-    await new Promise(r=>setTimeout(r,1000))
-    setSent(true)
+    await new Promise(r => setTimeout(r, 1200))
+    toast.success('Message sent! We will reply within 24 hours.')
+    setForm({ name: '', email: '', subject: '', message: '' })
     setLoading(false)
   }
 
   return (
-    <div style={{background:'var(--bg)',color:'var(--t1)',fontFamily:'var(--font-b)',minHeight:'100vh'}}>
-      <PublicNav/>
-      <section style={{paddingTop:140,paddingBottom:96,position:'relative',zIndex:1}}>
-        <div className="w" style={{maxWidth:640}}>
-          <div style={{textAlign:'center',marginBottom:56}}>
-            <div className="fu d0" style={{display:'inline-block',padding:'7px 18px',borderRadius:99,background:'rgba(201,168,76,0.08)',border:'1px solid rgba(201,168,76,0.2)',fontSize:12,fontWeight:600,color:'var(--gold)',letterSpacing:'0.07em',marginBottom:24}}>CONTACT</div>
-            <h1 className="fu d1 pf" style={{fontSize:'clamp(2rem,4vw,3rem)',fontWeight:800,letterSpacing:'-0.025em',marginBottom:12}}>Get in touch</h1>
-            <p className="fu d2" style={{fontSize:16,color:'var(--t2)'}}>We reply within 24 hours on business days.</p>
-          </div>
+    <div style={{ background: 'var(--bg-base)', color: 'var(--text-1)', minHeight: '100vh' }}>
+      <MarketingNav/>
 
-          {/* Channel cards */}
-          <div className="fu d3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:32}}>
-            {CHANNELS.map(c=>(
-              <div key={c.l} style={{background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.05)',borderRadius:16,padding:'20px',textAlign:'center'}}>
-                <div style={{fontSize:24,marginBottom:10}}>{c.icon}</div>
-                <p style={{fontSize:12,fontWeight:600,color:'var(--t3)',marginBottom:4}}>{c.l}</p>
-                <p style={{fontSize:12,color:'var(--t2)',lineHeight:1.5}}>{c.v}</p>
-              </div>
-            ))}
-          </div>
-
-          {sent ? (
-            <div style={{textAlign:'center',padding:'60px 40px',background:'var(--bg3)',border:'1px solid rgba(14,217,122,0.2)',borderRadius:24}}>
-              <div style={{fontSize:48,marginBottom:16}}>✅</div>
-              <h2 className="pf" style={{fontSize:24,fontWeight:700,marginBottom:8}}>Message sent!</h2>
-              <p style={{color:'var(--t2)'}}>We will reply to your email within 24 hours.</p>
-            </div>
-          ) : (
-            <form onSubmit={submit} className="fu d4" style={{background:'var(--bg3)',border:'1px solid rgba(255,255,255,0.05)',borderRadius:22,padding:'32px',display:'flex',flexDirection:'column',gap:16}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
-                <div style={{display:'flex',flexDirection:'column',gap:6}}>
-                  <label style={{fontSize:13,fontWeight:600,color:'var(--t2)'}}>Your Name *</label>
-                  <input style={INP} placeholder="Rahul Sharma" value={form.name} onChange={set('name')} required/>
-                </div>
-                <div style={{display:'flex',flexDirection:'column',gap:6}}>
-                  <label style={{fontSize:13,fontWeight:600,color:'var(--t2)'}}>Email *</label>
-                  <input style={INP} type="email" placeholder="rahul@email.com" value={form.email} onChange={set('email')} required/>
-                </div>
-              </div>
-              <div style={{display:'flex',flexDirection:'column',gap:6}}>
-                <label style={{fontSize:13,fontWeight:600,color:'var(--t2)'}}>Subject</label>
-                <input style={INP} placeholder="Question about Pro plan" value={form.subject} onChange={set('subject')}/>
-              </div>
-              <div style={{display:'flex',flexDirection:'column',gap:6}}>
-                <label style={{fontSize:13,fontWeight:600,color:'var(--t2)'}}>Message *</label>
-                <textarea style={{...INP,resize:'vertical',minHeight:120,lineHeight:1.6}} placeholder="How can we help?" value={form.message} onChange={set('message') as any} required/>
-              </div>
-              <button type="submit" disabled={loading} style={{padding:'12px',borderRadius:11,background:'var(--gold)',color:'var(--bg)',fontSize:15,fontWeight:700,border:'none',cursor:'pointer',fontFamily:'inherit',boxShadow:'0 2px 14px rgba(201,168,76,0.25)',opacity:loading?0.7:1,display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
-                {loading && <span className="sp"/>}{loading?'Sending…':'Send Message'}
-              </button>
-            </form>
-          )}
+      <div className="page-container" style={{ maxWidth: 640, paddingTop: 128, paddingBottom: 96 }}>
+        <div className="text-center mb-12">
+          <p className="label mb-3">Get in touch</p>
+          <h1 className="display-lg mb-3">Contact us</h1>
+          <p className="body-lg">We typically reply within 24 hours on business days.</p>
         </div>
-      </section>
-      <PublicFooter/>
+
+        <div className="surface p-6 md:p-8 mb-8">
+          <form onSubmit={submit} className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input label="Your name *" value={form.name} onChange={set('name')} placeholder="Rahul Sharma"/>
+              <Input label="Email *" type="email" value={form.email} onChange={set('email')} placeholder="rahul@email.com"/>
+            </div>
+            <Input label="Subject" value={form.subject} onChange={set('subject')} placeholder="Question about Pro plan"/>
+            <div className="flex flex-col gap-1.5">
+              <label className="caption font-semibold" style={{ color: 'var(--text-2)', letterSpacing: '0.02em' }}>Message *</label>
+              <textarea value={form.message} onChange={set('message') as any} rows={5} placeholder="How can we help you?" className="input"/>
+            </div>
+            <Button type="submit" loading={loading} size="lg" className="w-full mt-2">Send message</Button>
+          </form>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {CHANNELS.map(c => (
+            <div key={c.label} className="surface-sm p-4 text-center">
+              <div className="text-lg mb-2 mono" style={{ color: 'var(--primary-light)' }}>{c.icon}</div>
+              <p className="caption mb-1">{c.label}</p>
+              <p className="text-xs font-medium" style={{ color: 'var(--text-1)' }}>{c.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <MarketingFooter/>
     </div>
   )
 }
